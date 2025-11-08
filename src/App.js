@@ -25,9 +25,11 @@ function App() {
   const [moves, setMoves] = useState(0);
   const [matches, setMatches] = useState(0);
   const [gameStatus, setGameStatus] = useState("playing");
+  const [preventClick, setPreventClick] = useState(false)
 
   const handleCardClick = (index) => {
     if (gameStatus !== "playing") return;
+
     if (flipped.length === 2 || cards[index].isFlipped || cards[index].isMatched) return;
 
     const newCards = cards.map((card, idx) =>
@@ -53,12 +55,14 @@ function App() {
         }
       } else {
         setCards(newCards);
+        setPreventClick(true)
         setTimeout(() => {
           const unflippedCards = newCards.map((card, idx) =>
             idx === i || idx === j ? { ...card, isFlipped: false } : card
           );
           setCards(unflippedCards);
           setFlipped([]);
+          setPreventClick(false)
         }, 800);
       }
     } else {
@@ -74,16 +78,20 @@ function App() {
     setMatches(0);
     setGameStatus("playing");
   };
-
+  const pointerEvents = preventClick ? 'none' : 'initial';
   return (
     <div style={{ fontFamily: "sans-serif", textAlign: "center", maxWidth: 400, margin: "auto" }}>
       <Header moves={moves} matches={matches} gameStatus={gameStatus} />
-      <GameBoard cards={cards} onCardClick={handleCardClick} />
+      <div style={{pointerEvents}}>
+        <GameBoard cards={cards} onCardClick={handleCardClick} />
+
+      </div>
       {gameStatus === "won" && (
         <div style={{ margin: "1em" }}>
           <strong>🎉 You won! 🎉</strong>
         </div>
       )}
+      <hr style={{marginTop: '20px'}} />
       <Footer onRestart={handleRestart} />
     </div>
   );

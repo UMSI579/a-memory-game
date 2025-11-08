@@ -69,10 +69,11 @@ App
 ### **App**
 
 - **State:**
-    - `cardsData`: Array of card objects (e.g. `{id, value, isFlipped, isMatched}`)
+    - `cards`: Array of card objects (e.g. `{id, value, isFlipped, isMatched}`)
     - `moves`: Number of moves made
     - `matches`: Number of matches found
     - `gameStatus`: "playing" | "won" | "lost"
+    - `preventClick`: boolean - set to true immediately after two tiles are clicked, and used to prevent > 2 tiles from being selected.
 - **Props:**
     - None (root component)
 - **Responsibilities:**
@@ -94,7 +95,7 @@ App
 ### **GameBoard**
 
 - **Props:**
-    - `cardsData`: Array of cards
+    - `cards`: Array of cards
     - `onCardClick(cardId)`: Callback for card clicks
 - **State:**
     - None (stateless, receives props)
@@ -133,11 +134,11 @@ App
 │
 ├─ Header: receives moves, matches, gameStatus (props)
 │
-├─ GameBoard: receives cardsData, onCardClick (props)
+├─ GameBoard: receives cards, onCardClick (props)
 │       ├─ Card: receives id, value, isFlipped, isMatched, onClick (props)
 │       └─ Card: ...
 │
-└─ Footer: (no props/state)
+└─ Footer: receives handleRestart (props)
 ```
 
 ---
@@ -166,7 +167,7 @@ App
 
 ## 5. Additional information
 
-- `cardsData` updates when a card is clicked:
+- `cards` updates when a card is clicked:
     - Flip cards, check match
     - Update `matches`, `moves`
     - Set `isMatched` on matched pairs
